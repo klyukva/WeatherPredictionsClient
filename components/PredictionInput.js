@@ -62,7 +62,16 @@ class PredictionInput extends React.Component {
     }
     Fire.shared.sendPrediction({ name, cityName, temperature });
     this.setState({ cityName: '', temperature: '' });
+  };
+
+  onPressTableTop = () => {
     this.props.navigation.navigate('TableTop', {
+      name: this.props.navigation.getParam('name')
+    });
+  };
+
+  onPressLastSelf = () => {
+    this.props.navigation.navigate('LastTenPredictions', {
       name: this.props.navigation.getParam('name')
     });
   };
@@ -81,7 +90,7 @@ class PredictionInput extends React.Component {
 
   render() {
     return (
-      <View>
+      <View style={{ flex: 1 }}>
         <Text style={styles.title}>Enter city's name:</Text>
         <TextInput
           ref={this.refFirstInput}
@@ -106,6 +115,14 @@ class PredictionInput extends React.Component {
             <Text style={styles.buttonText}>Make a guess</Text>
           </TouchableOpacity>
         </View>
+        <View style={styles.buttonNavigatorRow}>
+          <TouchableOpacity onPress={this.onPressTableTop}>
+            <Text style={styles.buttonText}>Best scores</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={this.onPressLastSelf}>
+            <Text style={styles.buttonText}>My last predictions</Text>
+          </TouchableOpacity>
+        </View>
         <MessageBar />
       </View>
     );
@@ -128,10 +145,17 @@ const styles = StyleSheet.create({
     borderWidth: 1
   },
   button: {
-    marginLeft: offset,
+    marginLeft: offset / 2,
     flexDirection: 'row-reverse'
   },
+  buttonNavigatorRow: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'flex-end'
+  },
   buttonText: {
+    margin: offset / 2,
     fontSize: offset
   }
 });
