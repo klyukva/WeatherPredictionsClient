@@ -8,6 +8,7 @@ import {
   Text
 } from 'react-native';
 import { MessageBar, showMessage } from 'react-native-messages';
+import { withNavigation } from 'react-navigation';
 import cityNames from '../configs/citynames.json';
 
 class PredictionInput extends React.Component {
@@ -19,7 +20,7 @@ class PredictionInput extends React.Component {
     cityName: '',
     temperature: ''
   };
-
+  
   get user() {
     return {
       name: this.props.navigation.getParam('name'),
@@ -80,6 +81,16 @@ class PredictionInput extends React.Component {
     Fire.shared.off(this.props.navigation.getParam('name'));
   }
 
+  onLogOut (navigation) {
+    return () => {
+      try {
+        Fire.shared.logout().then(() => navigation.navigate('Login'));
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  } 
+
   onSubmitEditingFirstInput = () => this.secondTextInput.focus();
 
   onSubmitEditingSecondInput = () => this.onPress();
@@ -116,6 +127,9 @@ class PredictionInput extends React.Component {
           </TouchableOpacity>
         </View>
         <View style={styles.buttonNavigatorRow}>
+        <TouchableOpacity onPress={this.onLogOut(this.props.navigation)}>
+            <Text style={styles.buttonText}>GTFO</Text>
+          </TouchableOpacity>
           <TouchableOpacity onPress={this.onPressTableTop}>
             <Text style={styles.buttonText}>Best scores</Text>
           </TouchableOpacity>
@@ -129,7 +143,7 @@ class PredictionInput extends React.Component {
   }
 }
 
-const offset = 24;
+const offset = 16;
 const styles = StyleSheet.create({
   title: {
     marginTop: offset / 2,
@@ -164,4 +178,4 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-export default PredictionInput;
+export default withNavigation(PredictionInput);
