@@ -4,14 +4,14 @@ import firebaseConfig from './configs/FirebaseConfig';
 class Fire {
   constructor() {
     this.init();
-    this.observeAuth();
+    //this.observeAuth();
   }
 
   init = () => {
     firebase.initializeApp(firebaseConfig);
   };
-  observeAuth = () =>
-    firebase.auth().onAuthStateChanged(this.onAuthStateChanged);
+  observeAuth = (callbackFn) =>
+    firebase.auth().onAuthStateChanged( callbackFn || this.onAuthStateChanged );
 
   onAuthStateChanged = user => {
     if (!user) {
@@ -22,6 +22,45 @@ class Fire {
       }
     }
   };
+
+  getUserNameByUid = (uid) => {
+    return firebase.database().ref('usernames')
+    .orderByChild('userId')
+    .equalTo(uid)
+    .once('value', snapshot => {
+      if (!snapshot.exists()) throw 'User does not exist';
+      return snapshot.name;
+    });
+  }
+
+  signup = async (email, password, name) => {
+    await firebase
+    .database()
+    .ref('usernames')
+    .orderByChild('name')
+    .equalTo(name)
+    .once('value', snapshot => {
+      if (snapshot.exists()) throw  'name already exists'; })
+    const user = await firebase.auth()
+      .createUserWithEmailAndPassword(email, password);
+    await firebase
+    .database()
+    .ref('usernames')
+    .push({name, userId: user.user.uid})
+    console.log(`created user ${email} ${password} ${name}`);
+    return { user, name };
+  }
+
+  signIn = async (email, password) => {
+    const user = await firebase.auth().signInWithEmailAndPassword(email, password);
+    const name = await this.getUserNameByUid(user.user.uid);
+    console.log(`logged in as ${email} ${password} ${name}`);
+    return { user, name };
+  }
+
+  logout = async() => {
+    await firebase.auth().signOut();
+  }
 
   get refRequestTable() {
     return firebase
