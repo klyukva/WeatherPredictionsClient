@@ -19,7 +19,12 @@ export default class Loading extends React.Component {
     const navigation = this.props.navigation;
       this.setState({ 
           unsubscribe: Fire.shared.observeAuth( user => {
-            navigation.navigate( user ? 'PredictionInput' : 'Login' );
+            if (user) {
+              Fire.shared.getUserNameByUid(user.uid || user.user.uid)
+              .then((name) => navigation.navigate( 'PredictionInput', { name } ));
+            } else {
+              navigation.navigate( 'Login' );
+            }
       })
     });
   }

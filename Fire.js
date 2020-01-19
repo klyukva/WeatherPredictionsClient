@@ -23,6 +23,16 @@ class Fire {
     }
   };
 
+  getUserNameByUid = (uid) => {
+    return firebase.database().ref('usernames')
+    .orderByChild('userId')
+    .equalTo(uid)
+    .once('value', snapshot => {
+      if (!snapshot.exists()) throw 'User does not exist';
+      return snapshot.name;
+    });
+  }
+
   signup = async (email, password, name) => {
     await firebase
     .database()
@@ -43,13 +53,7 @@ class Fire {
 
   signIn = async (email, password) => {
     const user = await firebase.auth().signInWithEmailAndPassword(email, password);
-    const name = await firebase.database().ref('usernames')
-          .orderByChild('userId')
-          .equalTo(user.uid)
-          .once('value', snapshot => {
-            if (!snapshot.exists()) throw 'User does not exist';
-            return snapshot.name;
-          })
+    const name = await this.getUserNameByUid(user.user.uid);
     console.log(`logged in as ${email} ${password} ${name}`);
     return { user, name };
   }
