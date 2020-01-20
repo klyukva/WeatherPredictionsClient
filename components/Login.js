@@ -1,7 +1,6 @@
 // Login.js
 import React from 'react'
 import { Text, Input, Button, ThemeProvider } from 'react-native-elements'
-import { StyleSheet } from 'react-native'
 import {styles} from '../assets/styles'
 import Fire from '../Fire'
 
