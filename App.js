@@ -19,5 +19,6 @@ const navigator = createSwitchNavigator({
 {
   initialRouteName: 'Loading'
 });
+console.disableYellowBox = true;
 
 export default createAppContainer(navigator);
