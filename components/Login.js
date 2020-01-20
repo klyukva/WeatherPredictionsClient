@@ -1,6 +1,8 @@
 // Login.js
 import React from 'react'
-import { StyleSheet, Text, TextInput, View, Button } from 'react-native'
+import { Text, Input, Button, ThemeProvider } from 'react-native-elements'
+import { StyleSheet } from 'react-native'
+import {styles} from '../assets/styles'
 import Fire from '../Fire'
 
 export default class Login extends React.Component {
@@ -16,39 +18,51 @@ export default class Login extends React.Component {
   }  
   render() {
     return (
-      <View style={styles.container}>
-        <Text>Login</Text>
+      // <View >
+      <ThemeProvider style={styles.inputContainer}>
+        <Text style = {styles.text}>Login</Text>
         {this.state.errorMessage &&
           <Text style={{ color: 'red' }}>
             {this.state.errorMessage}
           </Text>}
-        <TextInput
+        <Input 
+          leftIcon={{ type: 'font-awesome', name: 'envelope' }}
+          containerStyle={styles.inputContainer}
           style={styles.textInput}
           autoCapitalize="none"
           placeholder="Email"
           onChangeText={email => this.setState({ email })}
           value={this.state.email}
         />
-        <TextInput
+
+        <Input
           secureTextEntry
+          containerStyle={styles.inputContainer}
           style={styles.textInput}
+          leftIcon={{ type: 'font-awesome', name: 'unlock-alt' }}
           autoCapitalize="none"
           placeholder="Password"
           onChangeText={password => this.setState({ password })}
           value={this.state.password}
         />
-        <Button title="Login" onPress={this.handleLogin} />
         <Button
+          containerStyle={styles.buttonContainer}
+          style={styles.button}
+          title="Login" 
+          onPress={this.handleLogin} />
+        <Button
+          type='outline'
+          containerStyle={styles.buttonContainer}
           title="Don't have an account? Sign Up"
           onPress={() => this.props.navigation.navigate('SignUp')}
         />
-      </View>
+        </ThemeProvider>
     )
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
+/*const styles = StyleSheet.create({
+  inputContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center'
@@ -58,6 +72,23 @@ const styles = StyleSheet.create({
     width: '90%',
     borderColor: 'gray',
     borderWidth: 1,
-    marginTop: 8
+    marginTop: 8,
+    height: 24
+  },
+  text: {
+    paddingTop: '40%',
+    fontSize: 20,
+    alignSelf: 'center'
+  },
+  button: {
+    width: '60%',
+    marginHorizontal: '30px'
+  },
+  inputContainer: {
+    paddingVertical: '3%'
+  },
+  buttonContainer: {
+    alignSelf: 'center',
+    width: '60%'
   }
-})
+})*/
