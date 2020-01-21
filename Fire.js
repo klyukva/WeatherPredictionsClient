@@ -30,8 +30,12 @@ class Fire {
       .orderByChild('userId')
       .equalTo(uid)
       .once('value', async snapshot => {
-        if (!snapshot.exists()) throw 'User does not exist';
-        this.getUserNameByExistsUid(uid, callback);
+        if (!snapshot.exists()) {
+          this.logout();
+          throw new Error('User does not exist');
+        } else {
+          this.getUserNameByExistsUid(uid, callback);
+        }
       });
   };
 
@@ -66,8 +70,8 @@ class Fire {
       .push({ name, userId: user.user.uid });
     console.log(`created user ${email} ${password} ${name}`);
     return { user, name };
-  }; 
-  
+  };
+
   signIn = async (email, password) => {
     await firebase.auth().signInWithEmailAndPassword(email, password);
     console.log(`logged in as ${email} ${password}`);
