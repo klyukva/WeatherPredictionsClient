@@ -178,16 +178,16 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
   },
   buttonTopNavigatorRow: {
-    flex: 0.4,
+    flex: 0.2,
     flexDirection: "row",
     justifyContent: "flex-end",
     alignItems: "flex-start",
-    paddingTop: Expo.Constants.statusBarHeight
   },
   inputContainer: {
-    flex: 0.4,
+    flex: 0.6,
     width: "85%",
-    alignSelf: "center"
+    alignSelf: "center",
+    justifyContent: "flex-start"
   },
   buttonText: {
     margin: offset / 2,

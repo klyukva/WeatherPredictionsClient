@@ -2,18 +2,45 @@
 import React from 'react';
 import { Text, Input, Button, ThemeProvider } from 'react-native-elements';
 import { styles } from '../assets/styles';
+import { MessageBar, showMessage } from 'react-native-messages';
 import Fire from '../Fire';
+import { View } from 'react-native';
 
 export default class Login extends React.Component {
   state = { email: '', password: '', errorMessage: null };
+  
   handleLogin = () => {
+    const {email, password} = this.state;
+
+    if (this.isIncorrectFormat(email, password)) {
+      return;
+    }
+
     Fire.shared
-      .signIn(this.state.email, this.state.password)
+      .signIn(email, password)
       .then(() => {
         this.props.navigation.navigate('Loading');
       })
       .catch(error => this.setState({ errorMessage: error.message }));
     console.log('handleLogin');
+  };
+  
+  isIncorrectFormat = (email, password) => { 
+    let errMessages = []
+    
+    if (!email) {
+      errMessages.push('Please, enter email')
+    }
+    
+    if (!password) {
+      errMessages.push('Please, enter password')
+    }
+
+    if (errMessages.length) {
+      showMessage(errMessages.join('\n'));
+      return true;
+    }
+    return false;
   };
 
   onSubmitEditingFirstInput = () => this.secondTextInput.focus();
@@ -29,9 +56,11 @@ export default class Login extends React.Component {
       // <View >
       <ThemeProvider style={styles.inputContainer}>
         <Text style={styles.text}>Login</Text>
+        <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
         {this.state.errorMessage && (
           <Text style={{ color: 'red' }}>{this.state.errorMessage}</Text>
         )}
+        </View>
         <Input
           ref={this.refFirstInput}
           onSubmitEditing={this.onSubmitEditingFirstInput}
@@ -68,6 +97,7 @@ export default class Login extends React.Component {
           title="Don't have an account? Sign Up"
           onPress={() => this.props.navigation.navigate('SignUp')}
         />
+        <MessageBar />
       </ThemeProvider>
     );
   }

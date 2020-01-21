@@ -47,15 +47,16 @@ class Fire {
   };
 
   signup = async (email, password, name) => {
-    if (!name) throw 'please enter name';
+    let exist = false;
     await firebase
       .database()
       .ref('usernames')
       .orderByChild('name')
       .equalTo(name)
       .once('value', snapshot => {
-        if (snapshot.exists()) throw 'name already exists';
+        exist = snapshot.exists();
       });
+    if (exist) throw new Error('name is already in use');
     const user = await firebase
       .auth()
       .createUserWithEmailAndPassword(email, password);
@@ -65,8 +66,8 @@ class Fire {
       .push({ name, userId: user.user.uid });
     console.log(`created user ${email} ${password} ${name}`);
     return { user, name };
-  };
-
+  }; 
+  
   signIn = async (email, password) => {
     await firebase.auth().signInWithEmailAndPassword(email, password);
     console.log(`logged in as ${email} ${password}`);
