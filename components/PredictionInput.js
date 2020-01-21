@@ -102,7 +102,7 @@ class PredictionInput extends React.Component {
 
   render() {
     return (
-      <ThemeProvider style = {{ flex: 1 }}>
+      <ThemeProvider style={{ flex: 1 }}>
         <View style={{ flex: 1 }}>
           <View style={styles.buttonTopNavigatorRow}>
             <TouchableOpacity
@@ -138,6 +138,14 @@ class PredictionInput extends React.Component {
               </TouchableOpacity>
             </View>
           </View>
+          <View style={styles.buttonBottomNavigatorRow}>
+              <TouchableOpacity onPress={this.onPressTableTop}>
+                <Text style={styles.buttonText}>Top</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={this.onPressLastSelf}>
+                <Text style={styles.buttonText}>Last</Text>
+              </TouchableOpacity>
+            </View>
         </View>
       </ThemeProvider>
     );
@@ -162,15 +170,21 @@ const styles = StyleSheet.create({
     marginLeft: offset / 2,
     flexDirection: "row-reverse"
   },
+  buttonBottomNavigatorRow: {
+    flex: 0.2,
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    alignItems: "flex-end",
+  },
   buttonTopNavigatorRow: {
-    flex: 0.45,
+    flex: 0.4,
     flexDirection: "row",
     justifyContent: "flex-end",
     alignItems: "flex-start",
     paddingTop: Expo.Constants.statusBarHeight
   },
   inputContainer: {
-    flex: 0.55,
+    flex: 0.4,
     width: "85%",
     alignSelf: "center"
   },
