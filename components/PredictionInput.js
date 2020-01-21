@@ -7,7 +7,7 @@ import {
   TextInput,
   Text
 } from "react-native";
-import { showMessage } from "react-native-messages";
+import { showMessage, MessageBar } from "react-native-messages";
 import { ThemeProvider } from "react-native-elements";
 import { withNavigation } from "react-navigation";
 import cityNames from "../configs/citynames.json";
@@ -146,6 +146,7 @@ class PredictionInput extends React.Component {
                 <Text style={styles.buttonText}>Last</Text>
               </TouchableOpacity>
             </View>
+            <MessageBar />
         </View>
       </ThemeProvider>
     );
