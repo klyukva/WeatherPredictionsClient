@@ -1,30 +1,17 @@
-import React from 'react';
-import {
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  TextInput,
-  Text
-} from 'react-native';
-import {
-  Table,
-  TableWrapper,
-  Row,
-  Rows,
-  Col,
-  Cols,
-  Cell
-} from 'react-native-table-component';
+import React from "react";
+import { View, StyleSheet, Text } from "react-native";
+import { Table, Row, Rows } from "react-native-table-component";
+import { ThemeProvider } from "react-native-elements";
 
-import Fire from '../Fire';
+import Fire from "../Fire";
 
 class TableTop extends React.Component {
   static navigationOptions = ({ navigation }) => ({
-    title: (navigation.state.params || {}).name || 'Prediction'
+    title: (navigation.state.params || {}).name || "Prediction"
   });
 
   state = {
-    tableHead: ['User', 'Score'],
+    tableHead: ["User", "Score"],
     tableData: []
   };
 
@@ -39,17 +26,19 @@ class TableTop extends React.Component {
   render() {
     console.log(JSON.stringify(this.state));
     return (
-      <View style={styles.container}>
-        <Text style={styles.title}>Top scores</Text>
-        <Table borderStyle={{ borderWidth: 2, borderColor: '#c8e1ff' }}>
-          <Row
-            data={this.state.tableHead}
-            style={styles.head}
-            textStyle={styles.text}
-          />
-          <Rows data={this.state.tableData} textStyle={styles.text} />
-        </Table>
-      </View>
+      <ThemeProvider>
+        <View style={styles.container}>
+          <Text style={styles.title}>Top scores</Text>
+          <Table borderStyle={{ borderWidth: 2, borderColor: "#D7D7D7" }}>
+            <Row
+              data={this.state.tableHead}
+              style={styles.head}
+              textStyle={styles.text}
+            />
+            <Rows data={this.state.tableData} textStyle={styles.text} />
+          </Table>
+        </View>
+      </ThemeProvider>
     );
   }
 }
@@ -57,12 +46,12 @@ class TableTop extends React.Component {
 const offset = 24;
 const styles = StyleSheet.create({
   title: {
-    alignSelf: 'center',
+    alignSelf: "center",
     marginBottom: offset,
     fontSize: offset
   },
-  container: { flex: 1, padding: 6, paddingTop: 30, backgroundColor: '#fff' },
-  head: { backgroundColor: '#f1f8ff', height: 50 },
+  container: { flex: 1, padding: 6, paddingTop: 30, width: "85%", alignSelf: "center"},
+  head: { backgroundColor: "#f1f1f1", height: 50 },
   text: { margin: 3, fontSize: 12 }
 });
 

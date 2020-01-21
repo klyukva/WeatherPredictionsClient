@@ -21,7 +21,11 @@ export default class Loading extends React.Component {
           unsubscribe: Fire.shared.observeAuth( user => {
             if (user) {
               Fire.shared.getUserNameByUid(user.uid || user.user.uid)
-              .then((name) => navigation.navigate( 'PredictionInput', { name } ));
+              .then((name) => navigation.navigate( 'PredictionInput', { name } ))
+              //some fuckup like persisted anon login token happened
+              .catch((error) => {
+                Fire.shared.logout().then(()=>navigation.navigate('Login', {errorMessage: error.message}));
+              });
             } else {
               navigation.navigate( 'Login' );
             }
