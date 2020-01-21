@@ -10,8 +10,8 @@ class Fire {
   init = () => {
     firebase.initializeApp(firebaseConfig);
   };
-  observeAuth = (callbackFn) =>
-    firebase.auth().onAuthStateChanged( callbackFn || this.onAuthStateChanged );
+  observeAuth = callbackFn =>
+    firebase.auth().onAuthStateChanged(callbackFn || this.onAuthStateChanged);
 
   onAuthStateChanged = user => {
     if (!user) {
@@ -23,44 +23,58 @@ class Fire {
     }
   };
 
-  getUserNameByUid = (uid) => {
-    return firebase.database().ref('usernames')
-    .orderByChild('userId')
-    .equalTo(uid)
-    .once('value', snapshot => {
-      if (!snapshot.exists()) throw 'User does not exist';
-      return snapshot.name;
-    });
-  }
+  getUserNameByUid = (uid, callback) => {
+    firebase
+      .database()
+      .ref('usernames')
+      .orderByChild('userId')
+      .equalTo(uid)
+      .once('value', async snapshot => {
+        if (!snapshot.exists()) throw 'User does not exist';
+        this.getUserNameByExistsUid(uid, callback);
+      });
+  };
+
+  getUserNameByExistsUid = (uid, callback) => {
+    firebase
+      .database()
+      .ref('usernames')
+      .orderByChild('userId')
+      .equalTo(uid)
+      .once('child_added', snapshotIn => {
+        callback(snapshotIn.val().name);
+      });
+  };
 
   signup = async (email, password, name) => {
+    if (!name) throw 'please enter name';
     await firebase
-    .database()
-    .ref('usernames')
-    .orderByChild('name')
-    .equalTo(name)
-    .once('value', snapshot => {
-      if (snapshot.exists()) throw  'name already exists'; })
-    const user = await firebase.auth()
+      .database()
+      .ref('usernames')
+      .orderByChild('name')
+      .equalTo(name)
+      .once('value', snapshot => {
+        if (snapshot.exists()) throw 'name already exists';
+      });
+    const user = await firebase
+      .auth()
       .createUserWithEmailAndPassword(email, password);
     await firebase
-    .database()
-    .ref('usernames')
-    .push({name, userId: user.user.uid})
+      .database()
+      .ref('usernames')
+      .push({ name, userId: user.user.uid });
     console.log(`created user ${email} ${password} ${name}`);
     return { user, name };
-  }
+  };
 
   signIn = async (email, password) => {
-    const user = await firebase.auth().signInWithEmailAndPassword(email, password);
-    const name = await this.getUserNameByUid(user.user.uid);
-    console.log(`logged in as ${email} ${password} ${name}`);
-    return { user, name };
-  }
+    await firebase.auth().signInWithEmailAndPassword(email, password);
+    console.log(`logged in as ${email} ${password}`);
+  };
 
-  logout = async() => {
+  logout = async () => {
     await firebase.auth().signOut();
-  }
+  };
 
   get refRequestTable() {
     return firebase
@@ -163,4 +177,5 @@ class Fire {
 }
 
 Fire.shared = new Fire();
+console.disableYellowBox = true;
 export default Fire;

@@ -1,62 +1,75 @@
 // Login.js
-import React from 'react'
-import { Text, Input, Button, ThemeProvider } from 'react-native-elements'
-import {styles} from '../assets/styles'
-import Fire from '../Fire'
+import React from 'react';
+import { Text, Input, Button, ThemeProvider } from 'react-native-elements';
+import { styles } from '../assets/styles';
+import Fire from '../Fire';
 
 export default class Login extends React.Component {
-  state = { email: '', password: '', errorMessage: null }  
+  state = { email: '', password: '', errorMessage: null };
   handleLogin = () => {
-    Fire.shared.signIn(this.state.email, this.state.password)
-      .then((userWithName) => this.props.navigation.navigate('PredictionInput',
-      {
-        name: userWithName.name
-      }))
-      .catch(error => this.setState({ errorMessage: error.message }))
-    console.log('handleLogin')
-  }  
+    Fire.shared
+      .signIn(this.state.email, this.state.password)
+      .then(() => {
+        this.props.navigation.navigate('Loading');
+      })
+      .catch(error => this.setState({ errorMessage: error.message }));
+    console.log('handleLogin');
+  };
+
+  onSubmitEditingFirstInput = () => this.secondTextInput.focus();
+
+  onSubmitEditingSecondInput = () => this.handleLogin();
+
+  refFirstInput = input => (this.firstTextInput = input);
+
+  refSecondInput = input => (this.secondTextInput = input);
+
   render() {
     return (
       // <View >
       <ThemeProvider style={styles.inputContainer}>
-        <Text style = {styles.text}>Login</Text>
-        {this.state.errorMessage &&
-          <Text style={{ color: 'red' }}>
-            {this.state.errorMessage}
-          </Text>}
-        <Input 
+        <Text style={styles.text}>Login</Text>
+        {this.state.errorMessage && (
+          <Text style={{ color: 'red' }}>{this.state.errorMessage}</Text>
+        )}
+        <Input
+          ref={this.refFirstInput}
+          onSubmitEditing={this.onSubmitEditingFirstInput}
           leftIcon={{ type: 'font-awesome', name: 'envelope' }}
           containerStyle={styles.inputContainer}
           style={styles.textInput}
-          autoCapitalize="none"
-          placeholder="Email"
+          autoCapitalize='none'
+          placeholder='Email'
           onChangeText={email => this.setState({ email })}
           value={this.state.email}
         />
 
         <Input
+          ref={this.refSecondInput}
+          onSubmitEditing={this.onSubmitEditingSecondInput}
           secureTextEntry
           containerStyle={styles.inputContainer}
           style={styles.textInput}
           leftIcon={{ type: 'font-awesome', name: 'unlock-alt' }}
-          autoCapitalize="none"
-          placeholder="Password"
+          autoCapitalize='none'
+          placeholder='Password'
           onChangeText={password => this.setState({ password })}
           value={this.state.password}
         />
         <Button
           containerStyle={styles.buttonContainer}
           style={styles.button}
-          title="Login" 
-          onPress={this.handleLogin} />
+          title='Login'
+          onPress={this.handleLogin}
+        />
         <Button
           type='outline'
           containerStyle={styles.buttonContainer}
           title="Don't have an account? Sign Up"
           onPress={() => this.props.navigation.navigate('SignUp')}
         />
-        </ThemeProvider>
-    )
+      </ThemeProvider>
+    );
   }
 }
 
