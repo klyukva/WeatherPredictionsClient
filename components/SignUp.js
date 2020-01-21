@@ -15,9 +15,9 @@ export default class SignUp extends React.Component {
           routeName: 'PredictionInput',
           key: 'PredictionInput',
           params: { name: userWithName.name }
-        })
-      )
-      .catch(error => this.setState({ errorMessage: error.message }));
+        }),
+        error => this.setState({ errorMessage: error.message })
+      );
     console.log('handleSignUp');
   };
 
